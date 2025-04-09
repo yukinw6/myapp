@@ -20,6 +20,22 @@
 
                 <form method="POST" class="mb-4">
                     <div class="mb-3">
+                        <label for="genre" class="form-label">ジャンルを選んでください：</label>
+                        <select id="genre" name="genre" class="form-select">
+                            <option value="">-- ジャンルを選択 --</option>
+                            <option value="アクション">アクション</option>
+                            <option value="SF">SF</option>
+                            <option value="恋愛">恋愛</option>
+                            <option value="ミステリー">ミステリー</option>
+                            <option value="ファンタジー">ファンタジー</option>
+                            <option value="ノンフィクション">ノンフィクション</option>
+                            <option value="自己啓発">自己啓発</option>
+                            <option value="ホラー">ホラー</option>
+                            <option value="ドラマ">ドラマ</option>
+                            <option value="歴史">歴史</option>
+                        </select>
+                    </div>
+                    <div class="mb-3">
                         <label for="user_input" class="form-label">好みや気分を入力してください：</label>
                         <textarea id="user_input" name="user_input" class="form-control" rows="3"
                             placeholder="例：感動できる映画を知りたい、最近読んだミステリーが面白かった、など"></textarea>

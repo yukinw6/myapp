@@ -28,25 +28,11 @@ def index():
     response_html = None
 
     if request.method == "POST":
+        genre = request.form.get("genre", "").strip()
         user_input = request.form.get("user_input", "")
-        if user_input:
-            # response = client.chat.completions.create(
-            #     model="gpt-3.5-turbo",
-            #     messages=[
-            #         {"role": "system", "content": "You are a helpful assistant."},
-            #         *[
-            #             (
-            #                 {"role": "user", "content": h["user"]}
-            #                 if h["user"]
-            #                 else {"role": "assistant", "content": h["assistant"]}
-            #             )
-            #             for h in session["history"]
-            #         ],
-            #         {"role": "user", "content": user_input},
-            #     ],
-            #     max_tokens=300,
-            #     temperature=0.7,
-            # )
+        # 両方を組み合わせてプロンプトに渡す
+        full_prompt = f"ジャンル: {genre}\n要望: {user_input}"
+        if genre or user_input:
             # 会話の履歴を整形してOpenAIに投げる
             messages = [
                 {
@@ -60,7 +46,7 @@ def index():
                 messages.append({"role": "assistant", "content": h["assistant"]})
 
             # 今回のユーザー入力
-            messages.append({"role": "user", "content": user_input})
+            messages.append({"role": "user", "content": full_prompt})
 
             response = client.chat.completions.create(
                 model="gpt-3.5-turbo",
@@ -72,7 +58,7 @@ def index():
             response_html = markdown.markdown(response_text)  # ← ここで変換
 
             # 会話履歴に追加（Markdown対応）
-            session["history"].append({"user": user_input, "assistant": response_html})
+            session["history"].append({"user": full_prompt, "assistant": response_html})
             session.modified = True
 
     return render_template(
