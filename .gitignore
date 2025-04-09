@@ -1,0 +1,17 @@
+
+# Python関連
+__pycache__/
+*.py[cod]
+*.egg-info/
+dist/
+build/
+
+# 仮想環境
+venv/
+
+# 環境変数ファイル
+.env
+
+# OS関連
+.DS_Store
+Thumbs.db
