@@ -46,6 +46,13 @@ def initdb():
     return "DB initialized!"
 
 
+# 履歴テーブル用のHTML
+@app.route("/logs")
+def view_logs():
+    logs = ChatLog.query.order_by(ChatLog.id.desc()).limit(20).all()
+    return render_template("logs.html", logs=logs)
+
+
 # OpenAIクライアントの初期化 ← ここがポイント！
 client = OpenAI(api_key=api_key)
 # print(f"API KEY = {api_key}")
