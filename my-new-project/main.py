@@ -1,18 +1,50 @@
-from flask import Flask, request, render_template, session
-from openai import OpenAI
-import markdown
 import os
+from flask import Flask, request, render_template, session
+from flask_sqlalchemy import SQLAlchemy
+import markdown
+from openai import OpenAI
 from dotenv import load_dotenv
 
 # .envファイルの読み込み
 load_dotenv()
 
-# 環境変数からAPIキー取得
-api_key = os.getenv("OPENAI_API_KEY")
-
 # Flaskアプリの初期化
 app = Flask(__name__)
 app.secret_key = os.urandom(24)  # セッション暗号化用の秘密鍵（固定化してもOK）
+app.config["TEMPLATES_AUTO_RELOAD"] = True
+
+# DB設定
+DB_HOST = os.environ.get("DB_HOST", "localhost")
+DB_NAME = os.environ.get("DB_NAME", "myapp_db")
+DB_USER = os.environ.get("DB_USER", "myapp_user")
+DB_PASS = os.environ.get("DB_PASS", "myapp_pass")
+
+# SQLAlchemyのDB接続URL (PostgreSQL)
+app.config["SQLALCHEMY_DATABASE_URI"] = (
+    f"postgresql://{DB_USER}:{DB_PASS}@{DB_HOST}:5432/{DB_NAME}"
+)
+app.config["SQLALCHEMY_TRACK_MODIFICATIONS"] = False
+
+db = SQLAlchemy(app)
+
+
+# 環境変数からAPIキー取得
+api_key = os.getenv("OPENAI_API_KEY")
+
+
+# DBモデル定義
+class ChatLog(db.Model):
+    id = db.Column(db.Integer, primary_key=True)
+    user_text = db.Column(db.Text)
+    ai_response = db.Column(db.Text)
+
+
+# 初期化用（初回だけ叩く）
+@app.route("/initdb")
+def initdb():
+    db.create_all()
+    return "DB initialized!"
+
 
 # OpenAIクライアントの初期化 ← ここがポイント！
 client = OpenAI(api_key=api_key)
@@ -60,6 +92,14 @@ def index():
             # 会話履歴に追加（Markdown対応）
             session["history"].append({"user": full_prompt, "assistant": response_html})
             session.modified = True
+
+            # DBにも保存
+            log = ChatLog(user_text=full_prompt, ai_response=response_text)
+            db.session.add(log)
+            db.session.commit()
+
+    # 直近の履歴（DB）も表示したければ：
+    logs = ChatLog.query.order_by(ChatLog.id.desc()).limit(10).all()
 
     return render_template(
         "index.html", response_text=response_html, history=session["history"]
