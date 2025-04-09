@@ -51,7 +51,7 @@ def index():
             response = client.chat.completions.create(
                 model="gpt-3.5-turbo",
                 messages=messages,
-                max_tokens=500,
+                max_tokens=2000,
                 temperature=0.7,
             )
             response_text = response.choices[0].message.content.strip()
