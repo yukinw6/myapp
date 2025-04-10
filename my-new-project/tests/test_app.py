@@ -18,6 +18,7 @@ def client():
     app.config["SECRET_KEY"] = "test_secret_key"  # テスト用の秘密鍵を設定
     with app.test_client() as client:
         with app.app_context():
+                db.create_all()  # ← ここでテーブル作成
             yield client
 
 
