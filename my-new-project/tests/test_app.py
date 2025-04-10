@@ -9,7 +9,7 @@ import main  # 'main' モジュールをインポート
 # プロジェクトルートをパスに追加
 sys.path.insert(0, os.path.abspath(os.path.join(os.path.dirname(__file__), "..")))
 
-from main import app  # 'app' から 'main' に変更
+from main import app, db  # ← ここで app と db を両方インポート
 
 
 @pytest.fixture
