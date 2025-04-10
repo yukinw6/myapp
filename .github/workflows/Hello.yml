@@ -1,0 +1,12 @@
+name: Hello CI
+
+on: 
+  push:
+    branches: [ main, yasuyuki_branch ]
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+      - run: echo "Hello from GitHub Actions!"
