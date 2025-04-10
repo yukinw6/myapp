@@ -24,4 +24,4 @@
 ## セキュリティ
 
 - **APIキーは絶対に公開しないでください。**
-- `.env` ファイルは `.gitignore` に追加されています。
+- `.env` ファイルは `.gitignore` に追加されています。# Trigger CI again
