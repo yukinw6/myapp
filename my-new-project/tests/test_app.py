@@ -9,7 +9,7 @@ import main  # 'main' モジュールをインポート
 # プロジェクトルートをパスに追加
 sys.path.insert(0, os.path.abspath(os.path.join(os.path.dirname(__file__), "..")))
 
-from main import app  # 'app' から 'main' に変更
+from main import app, db  # ← ここで app と db を両方インポート
 
 
 @pytest.fixture
@@ -18,7 +18,8 @@ def client():
     app.config["SECRET_KEY"] = "test_secret_key"  # テスト用の秘密鍵を設定
     with app.test_client() as client:
         with app.app_context():
-            yield client
+            db.create_all()  # ← ここでテーブル作成
+        yield client
 
 
 def test_index_get(client):

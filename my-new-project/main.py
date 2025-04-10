@@ -6,7 +6,7 @@ from openai import OpenAI
 from dotenv import load_dotenv
 
 # .envファイルの読み込み
-load_dotenv()
+load_dotenv(dotenv_path=".env", override=True)  # ← 明示的に
 
 # Flaskアプリの初期化
 app = Flask(__name__)
