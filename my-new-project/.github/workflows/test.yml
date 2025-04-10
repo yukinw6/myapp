@@ -1,6 +1,6 @@
 name: CI
 
-on:
+on: # 開発中は２つとも指定しておく。本番の場合はmainだけでよい
   push:
     branches: [ main, yasuyuki_branch ]
   pull_request:
