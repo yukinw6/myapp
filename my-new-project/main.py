@@ -26,6 +26,8 @@ app.config["SQLALCHEMY_DATABASE_URI"] = (
 app.config["SQLALCHEMY_TRACK_MODIFICATIONS"] = False
 
 db = SQLAlchemy(app)
+with app.app_context():
+    db.create_all()  # テーブルがまだなければ作成する
 
 
 # 環境変数からAPIキー取得
